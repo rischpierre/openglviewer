@@ -7,12 +7,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(GLFW_BUILD_WAYLAND OFF)  # if not it will fail try to build wayland
 
 find_package(OpenGL 4.6 REQUIRED)
-find_package(assimp CONFIG REQUIRED)
-find_package(glfw3 CONFIG REQUIRED)
+find_package(assimp 5 CONFIG REQUIRED)
+find_package(glfw3 3 CONFIG REQUIRED)
+find_package(glm 1 CONFIG REQUIRED)
+find_package(glad 0.1 CONFIG REQUIRED)
+find_package(Stb 2022 REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
-find_package(Stb REQUIRED)
-find_package(glad CONFIG REQUIRED)
 
 file(GLOB_RECURSE sources source/*.cpp include/*.hpp)
 add_executable(${PROJECT_NAME} ${sources})
