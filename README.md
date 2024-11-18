@@ -1,7 +1,7 @@
 # Description
 
 3D viewer in openGL from scratch as a learning project
-[demo.webm](demo.gif)
+![demo.gif](demo.gif)
 
 # Build
 
