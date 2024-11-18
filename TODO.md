@@ -4,7 +4,4 @@
 **easy**
 
 - [ ] lock dependencies at their major
-- [ ] squash commits
-- [ ] add an info in README on how to use vcpkg
-- [ ] add description on github: this is a project to learn opengl
 - [ ] create a gif to show how it works
