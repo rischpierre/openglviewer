@@ -1,2 +1,3 @@
 - [ ] gizmo transform
 - [ ] enable textures
+- [ ] use scene description to put the transform mat
