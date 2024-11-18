@@ -1,3 +1,8 @@
+# Description
+
+3D viewer in openGL from scratch as a learning project
+[demo.webm](demo.webm)
+
 # Build
 
 It uses vcpkg to install the dependencies.  
@@ -6,6 +11,6 @@ Dependencies are defined in [vcpkg.json](vcpkg.json)
 
 # References
 
-[Opengl api reference](https://registry.khronos.org/OpenGL-Refpages/gl4/)  
+[Opengl reference](https://registry.khronos.org/OpenGL-Refpages/gl4/)  
 [LearnOpenGl](https://github.com/JoeyDeVries/LearnOpenGL)  
 [Object selection](https://en.wikibooks.org/wiki/OpenGL_Programming/Object_selection)  

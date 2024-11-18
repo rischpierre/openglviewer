@@ -10,7 +10,7 @@
 
 namespace oglv {
 struct SceneDescription {
-    std::vector<std::string> obj_files = {"../resources/monkey_high.obj", "../resources/cube.obj"};
+    std::vector<std::string> obj_files = {"../resources/monkey.obj", "../resources/cube.obj"};
 
     std::vector<glm::mat4> transforms = {glm::mat4(0.f),
                                          glm::translate(object_2_transform, glm::vec3(3, 0, 0))
