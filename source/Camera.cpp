@@ -1,6 +1,11 @@
 #include "Camera.hpp"
 #include "glm/gtx/quaternion.hpp"
 
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#include "math.h"
+#endif
+
 oglv::Camera::Camera(int screen_width, int screen_height) {
     m_projection =
         glm::perspective(glm::radians(35.f),

@@ -51,9 +51,9 @@ oglv::Shader::Shader(const std::string &vertex_path, const std::string &frag_pat
     glGetShaderiv(m_id_vert, GL_COMPILE_STATUS, &success);
     int log_size = 512;
     if (!success) {
-        char log[log_size];
-        glGetShaderInfoLog(m_id_vert, log_size, nullptr, log);
-        spdlog::error("Compilation vertex shader error: ", std::string(log));
+        std::string log;
+        glGetShaderInfoLog(m_id_vert, log_size, nullptr, &log[0]);
+        spdlog::error("Compilation vertex shader error: ", log);
         exit(-1);
     }
     glAttachShader(m_id_program, m_id_vert);
@@ -63,9 +63,10 @@ oglv::Shader::Shader(const std::string &vertex_path, const std::string &frag_pat
     glCompileShader(m_id_frag);
     glGetShaderiv(m_id_frag, GL_COMPILE_STATUS, &success);
     if (!success) {
-        char log[log_size];
-        glGetShaderInfoLog(m_id_frag, log_size, nullptr, log);
-        spdlog::error("Compilation frag shader error {}", std::string(log));
+        // char log[log_size];
+        std::string log;
+        glGetShaderInfoLog(m_id_frag, log_size, nullptr, &log[0]);
+        spdlog::error("Compilation frag shader error {}", log);
         exit(-1);
     }
     glAttachShader(m_id_program, m_id_frag);
@@ -75,9 +76,9 @@ oglv::Shader::Shader(const std::string &vertex_path, const std::string &frag_pat
     glGetProgramiv(m_id_program, GL_LINK_STATUS, &success);
 
     if (!success) {
-        char log[log_size];
-        glGetProgramInfoLog(m_id_program, log_size, nullptr, log);
-        spdlog::error("linking: {}", std::string(log));
+        std::string log;
+        glGetProgramInfoLog(m_id_program, log_size, nullptr, &log[0]);
+        spdlog::error("linking: {}", log);
     }
     glDeleteShader(m_id_vert);
     glDeleteShader(m_id_frag);

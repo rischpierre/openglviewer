@@ -25,7 +25,7 @@ public:
     Light *get_light() { return &m_light; };
     std::shared_ptr<Gizmo> get_gizmo() { return std::make_shared<Gizmo>(m_gizmo); };
 
-    std::shared_ptr<Mesh> get_mesh(uint id) {
+    std::shared_ptr<Mesh> get_mesh(unsigned int id) {
 
         id -= 4; // id 0 -> 4 is for the background and the gizmo
         if (id >= 0 && id < m_meshes.size()) {

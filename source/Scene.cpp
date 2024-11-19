@@ -40,12 +40,12 @@ void oglv::Scene::load_meshes(const std::vector<std::string> &obj_files) {
             spdlog::error("ASSIMP {}", importer.GetErrorString());
             exit(-1);
         }
-        for (uint m = 0; m < assimp_scene->mNumMeshes; m++) {
+        for (unsigned int m = 0; m < assimp_scene->mNumMeshes; m++) {
             aiMesh *mesh = assimp_scene->mMeshes[m];
             std::vector<float> vertices;
-            std::vector<uint> indices;
+            std::vector<unsigned int> indices;
 
-            for (uint i = 0; i < mesh->mNumVertices; i++) {
+            for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
                 vertices.push_back(mesh->mVertices[i].x);
                 vertices.push_back(mesh->mVertices[i].y);
                 vertices.push_back(mesh->mVertices[i].z);
@@ -57,8 +57,8 @@ void oglv::Scene::load_meshes(const std::vector<std::string> &obj_files) {
                 vertices.push_back(0.f);
                 vertices.push_back(0.f);
             }
-            for (uint i = 0; i < mesh->mNumFaces; i++) {
-                uint *indices_ = mesh->mFaces[i].mIndices;
+            for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+                unsigned int *indices_ = mesh->mFaces[i].mIndices;
 
                 // there is only triangles
                 indices.push_back(*(indices_));
@@ -71,7 +71,7 @@ void oglv::Scene::load_meshes(const std::vector<std::string> &obj_files) {
                                              &vertices[0],
                                              vertices.size() * sizeof(float),
                                              &indices[0],
-                                             indices.size() * sizeof(uint),
+                                             indices.size() * sizeof(unsigned int),
                                              "../shaders/mesh.vert",
                                              "../shaders/mesh.frag");
             m_meshes.emplace_back(mesh_ptr);

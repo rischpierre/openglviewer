@@ -34,14 +34,14 @@ void oglv::GizmoAxis::draw(oglv::Camera *camera) {
 
 oglv::GizmoAxis::GizmoAxis(const std::vector<float> &vertices,
                            long size_vertices,
-                           const std::vector<uint> &indices,
+                           const std::vector<unsigned int> &indices,
                            long size_indices,
                            const std::string &vert_shader,
                            const std::string &frag_shader)
     : m_shader(vert_shader, frag_shader), m_vao(0), m_vbo(0), m_ebo(0), m_vertices(vertices),
       m_indices(indices) {
 
-    m_num_indices = static_cast<int>(size_indices / sizeof(uint));
+    m_num_indices = static_cast<int>(size_indices / sizeof(unsigned int));
 
     glGenVertexArrays(1, &m_vao);
     glGenBuffers(1, &m_vbo);
@@ -122,15 +122,15 @@ oglv::Gizmo::Gizmo() {
     }
 
     std::vector<float> vertices;
-    std::vector<uint> indices;
+    std::vector<unsigned int> indices;
 
-    for (uint i = 0; i < mesh->mNumVertices; i++) {
+    for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         vertices.push_back(mesh->mVertices[i].x);
         vertices.push_back(mesh->mVertices[i].y);
         vertices.push_back(mesh->mVertices[i].z);
     }
-    for (uint i = 0; i < mesh->mNumFaces; i++) {
-        uint *indices_ = mesh->mFaces[i].mIndices;
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+        unsigned int *indices_ = mesh->mFaces[i].mIndices;
 
         // there is only triangles
         indices.push_back(*(indices_));
@@ -141,19 +141,19 @@ oglv::Gizmo::Gizmo() {
     m_gizmo_arrow_x = std::make_shared<GizmoAxis>(vertices,
                                                   vertices.size() * sizeof(float),
                                                   indices,
-                                                  indices.size() * sizeof(uint),
+                                                  indices.size() * sizeof(unsigned int),
                                                   "../shaders/gizmo.vert",
                                                   "../shaders/gizmo.frag");
     m_gizmo_arrow_y = std::make_shared<GizmoAxis>(vertices,
                                                   vertices.size() * sizeof(float),
                                                   indices,
-                                                  indices.size() * sizeof(uint),
+                                                  indices.size() * sizeof(unsigned int),
                                                   "../shaders/gizmo.vert",
                                                   "../shaders/gizmo.frag");
     m_gizmo_arrow_z = std::make_shared<GizmoAxis>(vertices,
                                                   vertices.size() * sizeof(float),
                                                   indices,
-                                                  indices.size() * sizeof(uint),
+                                                  indices.size() * sizeof(unsigned int),
                                                   "../shaders/gizmo.vert",
                                                   "../shaders/gizmo.frag");
 

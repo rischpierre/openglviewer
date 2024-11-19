@@ -15,7 +15,7 @@ class GizmoAxis {
 public:
     GizmoAxis(const std::vector<float> &vertices,
               long size_vertices,
-              const std::vector<uint> &indices,
+              const std::vector<unsigned int> &indices,
               long size_indices,
               const std::string &vert_shader,
               const std::string &frag_shader);
@@ -35,7 +35,7 @@ private:
     glm::vec3 m_color;
 
     std::vector<float> m_vertices;
-    std::vector<uint> m_indices;
+    std::vector<unsigned int> m_indices;
 };
 class Gizmo {
 
