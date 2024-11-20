@@ -15,12 +15,19 @@ namespace oglv {
 
 enum editor_mode { TRANSFORM, SELECTION };
 
+/// Responsible for initializing the GLFW window
+/// and executing the main loop
 class Window {
 public:
     explicit Window(SceneDescription s);
+
+    /// Main loop
     void run(Scene *);
 
     Scene *get_scene() { return m_scene; };
+
+    /// There is one mode for selecting the object and
+    /// one for transforming them
     void set_mode(const enum editor_mode &m) {m_editor_current_mode = m;};
     enum editor_mode get_mode() const { return m_editor_current_mode; };
 

@@ -13,7 +13,7 @@ public:
     /// Call to openGl to use this shader
     void use() const { glUseProgram(m_id_program); };
 
-    /// loadj a texture from a path and pass it to openGL
+    /// load a texture from a path and pass it to openGL
     void generate_texture(const std::string &texture_path);
 
     [[nodiscard]] GLuint get_program_id() const { return m_id_program; };
@@ -26,8 +26,10 @@ public:
     void set_uniform_mat4(const std::string &name, const glm::mat4 &mat) const;
 
 private:
+    /// Returns the source code of the glsl shaders
     static std::string _read_source_code(const std::string &path);
 
+    /// Various ids for the openGL shaders
     GLuint m_id_vert = 0;
     GLuint m_id_frag = 0;
     GLuint m_id_program = 0;

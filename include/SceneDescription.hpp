@@ -20,6 +20,8 @@ struct SceneDescription {
     };
     int screen_width = 800;
     int screen_height = 600;
+
+    /// for the demo, an object is translated on the side
     glm::mat4 object_2_transform = glm::mat4(1.f);
 };
 } // namespace oglv
