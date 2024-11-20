@@ -21,13 +21,9 @@ public:
     void run(Scene *);
 
     Scene *get_scene() { return m_scene; };
-    void set_mode(const enum editor_mode &m) {
-
-        // todo make a map to print the name of the mode
-        spdlog::info("switch mode to {}", int(m));
-        m_editor_current_mode = m;
-    };
+    void set_mode(const enum editor_mode &m) {m_editor_current_mode = m;};
     enum editor_mode get_mode() const { return m_editor_current_mode; };
+
     std::shared_ptr<SceneDescription> get_scene_description_ptr() {
         return std::make_shared<SceneDescription>(m_scene_description);
     };

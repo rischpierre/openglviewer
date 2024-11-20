@@ -11,7 +11,7 @@
 #include "spdlog/spdlog.h"
 #include "stb_image.h"
 
-std::string oglv::Shader::_read_source(const std::string &path) {
+std::string oglv::Shader::_read_source_code(const std::string &path) {
 
     std::string code;
     std::ifstream shader_file;
@@ -29,8 +29,8 @@ std::string oglv::Shader::_read_source(const std::string &path) {
 }
 
 oglv::Shader::Shader(const std::string &vertex_path, const std::string &frag_path) {
-    const std::string vert_source = _read_source(vertex_path);
-    const std::string frag_source = _read_source(frag_path);
+    const std::string vert_source = _read_source_code(vertex_path);
+    const std::string frag_source = _read_source_code(frag_path);
 
     const char *shader_code_vert = vert_source.c_str();
     const char *shader_code_frag = frag_source.c_str();
@@ -85,7 +85,7 @@ oglv::Shader::Shader(const std::string &vertex_path, const std::string &frag_pat
 }
 
 void oglv::Shader::generate_texture(const std::string &texture_path) {
-    // load texture
+
     int width = 512, height = 512, channels = 3;
 
     stbi_set_flip_vertically_on_load(true);

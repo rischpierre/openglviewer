@@ -6,12 +6,14 @@
 #include "math.h"
 #endif
 
-oglv::Camera::Camera(int screen_width, int screen_height) {
-    m_projection =
-        glm::perspective(glm::radians(35.f),
-                         static_cast<float>(screen_width) / static_cast<float>(screen_height),
-                         1.f,
-                         1000.f);
+oglv::Camera::Camera(int screen_width, int screen_height)
+    : m_projection(
+          glm::perspective(glm::radians(35.f),
+                           static_cast<float>(screen_width) / static_cast<float>(screen_height),
+                           1.f,
+                           1000.f)),
+      m_orientation() {
+
     update();
 };
 

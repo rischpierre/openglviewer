@@ -13,7 +13,10 @@ public:
     void draw(Camera *camera);
 
 private:
+
+    /// number of lines composing the grid in both axis
     int m_grid_ticks = 20;
+
     std::vector<float> m_vertices;
     unsigned int m_vao, m_vbo;
     Shader m_shader;

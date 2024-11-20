@@ -10,19 +10,23 @@ class Shader {
 public:
     Shader(const std::string &vertex_path, const std::string &frag_path);
 
-    [[nodiscard]] GLuint get_program_id() const { return m_id_program; };
+    /// Call to openGl to use this shader
+    void use() const { glUseProgram(m_id_program); };
 
+    /// loadj a texture from a path and pass it to openGL
     void generate_texture(const std::string &texture_path);
 
+    [[nodiscard]] GLuint get_program_id() const { return m_id_program; };
+    [[nodiscard]] GLuint get_id_texture() const { return m_id_texture; };
+
+    /// functions to set uniforms on the shaders
     void set_uniform_bool(const std::string &name, bool value) const;
     void set_uniform_3f(const std::string &name, const glm::vec3 &value) const;
     void set_uniform_1f(const std::string &name, float value) const;
     void set_uniform_mat4(const std::string &name, const glm::mat4 &mat) const;
-    void use() const { glUseProgram(m_id_program); };
-    [[nodiscard]] GLuint get_id_texture() const { return m_id_texture; };
 
 private:
-    static std::string _read_source(const std::string &path);
+    static std::string _read_source_code(const std::string &path);
 
     GLuint m_id_vert = 0;
     GLuint m_id_frag = 0;

@@ -17,16 +17,53 @@
 #include "SceneDescription.hpp"
 
 oglv::Scene::Scene(SceneDescription s)
-    : m_scene_desciption(std::move(s)), m_camera(s.screen_width, s.screen_height), m_grid(),
+    : m_scene_description(std::move(s)), m_camera(s.screen_width, s.screen_height), m_grid(),
       m_light() {
-    create_light();
-    load_meshes(m_scene_desciption.obj_files);
+    _create_light();
+    _load_meshes();
     m_gizmo = oglv::Gizmo();
 }
+std::shared_ptr<oglv::Mesh> oglv::Scene::get_mesh(unsigned int id) {
 
-void oglv::Scene::load_meshes(const std::vector<std::string> &obj_files) {
+    id -= 4; // id 0 -> 4 is for the background and the gizmo
+    if (id >= 0 && id < m_meshes.size()) {
+        return m_meshes[id];
+    }
+    return nullptr;
+}
+void oglv::Scene::unset_transform_all() const {
+    for (const std::shared_ptr<Mesh> &m : m_meshes) {
+        m->set_ready_to_transform(false);
+    }
+}
+void oglv::Scene::deselect_all() const {
+    for (const std::shared_ptr<Mesh> &m : m_meshes) {
+        m->set_selected(false);
+    }
+}
+bool oglv::Scene::is_one_mesh_selected() const {
+    for (const auto &m : m_meshes) {
+        if (m->is_selected())
+            return true;
+    }
+    return false;
+}
 
-    for (const std::string &obj_file : obj_files) {
+void oglv::Scene::deselect_gizmo() const {
+    m_gizmo.get_m_gizmo_arrow_x()->set_selected(false);
+    m_gizmo.get_m_gizmo_arrow_y()->set_selected(false);
+    m_gizmo.get_m_gizmo_arrow_z()->set_selected(false);
+};
+void oglv::Scene::_create_light() {
+    // todo move light in scene description
+    m_light = Light();
+    m_light.position = glm::vec3(10, 10, 3);
+    m_light.intensity = glm::vec3(0.5, 0.4, 0.3);
+}
+
+void oglv::Scene::_load_meshes() {
+
+    for (const std::string &obj_file : m_scene_description.obj_files) {
 
         Assimp::Importer importer;
         importer.SetPropertyFloat("PP_GSN_MAX_SMOOTHING_ANGLE", 45);

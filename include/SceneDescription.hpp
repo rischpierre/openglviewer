@@ -9,6 +9,8 @@
 #include "glm/glm.hpp"
 
 namespace oglv {
+
+/// Describe the objects of the scene
 struct SceneDescription {
     std::vector<std::string> obj_files = {"../resources/monkey.obj", "../resources/cube.obj"};
 

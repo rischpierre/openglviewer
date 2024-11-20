@@ -9,14 +9,23 @@ namespace oglv {
 class Camera {
 public:
     Camera(int screen_width, int screen_height);
+
+    /// Compute the orientation matrix
     void update();
 
-    glm::mat4 get_projection() const { return m_projection; };
-
+    /// Add side rotation
     void add_yaw(float y);
+
+    /// Add up-down rotation
     void add_pitch(float p);
+
+    /// Camera and target slide together on the screen plane of the camera
     void pan(float vertical, float horizontal);
+
+    /// Move the camera and target forward and backward
     void dolly(float d);
+
+    [[nodiscard]] glm::mat4 get_projection() const { return m_projection; };
     glm::mat4 get_view();
 
 private:
@@ -26,7 +35,7 @@ private:
 
     glm::vec3 m_target = glm::vec3(0); // target point on which the camera rotates
 
-    float m_yaw = 0;   // rotate cam on the side side
+    float m_yaw = 0;   // rotate cam on the side
     float m_pitch = 0; // rotate cam on the front
 
     glm::vec3 m_forward = glm::vec3(0);

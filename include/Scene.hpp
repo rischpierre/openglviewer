@@ -9,61 +9,44 @@
 #include "SceneDescription.hpp"
 
 namespace oglv {
+
+/// Manages all the objects in the scene
 class Scene {
 public:
     explicit Scene(SceneDescription s);
-    void load_meshes(const std::vector<std::string> &obj_files);
+
+    /// Draw all the objects in the scene
     void draw();
 
-    void create_light() {
-        // todo move light in scene description
-        m_light = Light();
-        m_light.position = glm::vec3(10, 10, 3);
-        m_light.intensity = glm::vec3(0.5, 0.4, 0.3);
-    }
     Camera *get_camera() { return &m_camera; };
     Light *get_light() { return &m_light; };
     std::shared_ptr<Gizmo> get_gizmo() { return std::make_shared<Gizmo>(m_gizmo); };
-
-    std::shared_ptr<Mesh> get_mesh(unsigned int id) {
-
-        id -= 4; // id 0 -> 4 is for the background and the gizmo
-        if (id >= 0 && id < m_meshes.size()) {
-            return m_meshes[id];
-        }
-        return nullptr;
-    }
-    void unset_transform_all() {
-        for (const std::shared_ptr<Mesh> &m : m_meshes) {
-            m->set_ready_to_transform(false);
-        }
-    }
-    void deselect_all() {
-        for (const std::shared_ptr<Mesh> &m : m_meshes) {
-            m->set_selected(false);
-        }
-    }
-    bool is_one_mesh_selected() {
-        for (const auto &m : m_meshes) {
-            if (m->is_selected())
-                return true;
-        }
-        return false;
-    }
-
-    void set_gizmo_visibility(bool v) { m_gizmo.set_visible(v); }
-
     std::shared_ptr<GizmoAxis> get_gizmo_axis_from_id(GLint i);
 
-    void deselect_gizmo() {
-        m_gizmo.get_m_gizmo_arrow_x()->set_selected(false);
-        m_gizmo.get_m_gizmo_arrow_y()->set_selected(false);
-        m_gizmo.get_m_gizmo_arrow_z()->set_selected(false);
-    };
+    /// Get the mesh by its id. the ids from 0 to 4 are reserved for
+    /// the gizmo axis and the background
+    std::shared_ptr<Mesh> get_mesh(unsigned int id);
+
+    /// Un set the transform mode on all the meshes in the scene
+    void unset_transform_all() const;
+
+    /// Deselect all meshes in the scene
+    void deselect_all() const;
+
+    /// Deselect all the gizmo axis
+    void deselect_gizmo() const;
+    [[nodiscard]] bool is_one_mesh_selected() const;
+    void set_gizmo_visibility(bool v) { m_gizmo.set_visible(v); };
 
 private:
+    /// Create the light object to give the illumination direction and intensity
+    void _create_light();
+
+    /// Load all the meshes from the scene description
+    void _load_meshes();
+
     std::vector<std::shared_ptr<Mesh>> m_meshes;
-    SceneDescription m_scene_desciption;
+    SceneDescription m_scene_description;
     Grid m_grid;
     Camera m_camera;
     Light m_light;
