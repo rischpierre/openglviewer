@@ -42,18 +42,17 @@ void oglv::EventManager::_mouse_button_callback(GLFWwindow *window,
             mesh->set_selected(true);
     }
     // lock cursor on gizmo
-    else if (w->get_mode() == TRANSFORM && button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        std::shared_ptr<oglv::Mesh> mesh = w->get_scene()->get_selected_mesh();
-        std::shared_ptr<GizmoAxis> gizmo_axis = w->get_scene()->get_gizmo()->get_selected_gizmo_axis();
-        if (mesh && gizmo_axis) {
+    else if (w->get_mode() == TRANSFORM && button == GLFW_MOUSE_BUTTON_LEFT &&
+             action == GLFW_PRESS) {
+        std::shared_ptr<Mesh> mesh = w->get_scene()->get_selected_mesh();
+        std::shared_ptr<GizmoAxis> gizmo_axis =
+            w->get_scene()->get_gizmo()->get_selected_gizmo_axis();
+        if (mesh && gizmo_axis)
             cursor_locked = true;
-            std::cout << "lock cursor\n";
-        }
-    }
-    else if (w->get_mode() == TRANSFORM && button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-        std::cout << "unlock cursor\n";
+
+    } else if (w->get_mode() == TRANSFORM && button == GLFW_MOUSE_BUTTON_LEFT &&
+               action == GLFW_RELEASE)
         cursor_locked = false;
-    }
 }
 
 void oglv::EventManager::_key_callback(GLFWwindow *window,
@@ -84,7 +83,7 @@ void oglv::EventManager::_key_callback(GLFWwindow *window,
 
 void oglv::EventManager::_cursor_pos_callback(GLFWwindow *window, double xpos, double ypos) {
     auto *win = (Window *)glfwGetWindowUserPointer(window);
-    Scene* scene = win->get_scene();
+    Scene *scene = win->get_scene();
 
     // orbit cam
     if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) &&
@@ -97,7 +96,7 @@ void oglv::EventManager::_cursor_pos_callback(GLFWwindow *window, double xpos, d
     else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) &&
              glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
         scene->get_camera()->pan(static_cast<float>(ypos) - last_cursor_pos_y,
-                                          static_cast<float>(xpos) - last_cursor_pos_x);
+                                 static_cast<float>(xpos) - last_cursor_pos_x);
     }
     // dolly
     else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) &&
@@ -106,43 +105,60 @@ void oglv::EventManager::_cursor_pos_callback(GLFWwindow *window, double xpos, d
     }
 
     // transform gizmo
-    else if (win->get_mode() == TRANSFORM){
+    else if (win->get_mode() == TRANSFORM) {
         std::shared_ptr<Mesh> mesh = scene->get_selected_mesh();
         if (mesh) {
 
             if (cursor_locked) {
                 if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
                     std::shared_ptr<GizmoAxis> g = scene->get_gizmo()->get_selected_gizmo_axis();
-                    unsigned int id = g->get_id();
-                    // todo choose the delta based on the
-                    auto delta = static_cast<float>(xpos - last_cursor_pos_x) * 0.01f;
-                    glm::vec3 t{0};
+                    glm::vec3 direction = g->get_direction();
 
-                    if (id == 0) t = {delta, 0, 0};
-                    if (id == 1) t = {0, delta, 0};
-                    if (id == 2) t = {0, 0, delta};
+                    glm::vec3 up = win->get_scene()->get_camera()->get_up();
+                    glm::vec3 left = win->get_scene()->get_camera()->get_left();
+                    float dot_up = glm::dot(up, direction);
+                    float dot_down = glm::dot(-up, direction);
 
-                    mesh->translate(t);
+                    float dot_left = glm::dot(left, direction);
+                    float dot_right = glm::dot(-left, direction);
+
+                    std::vector<float> t = {dot_up, dot_down, dot_left, dot_right};
+                    int i = std::max_element(t.begin(), t.end()) - t.begin();
+
+                    float delta_y = static_cast<float>(ypos - last_cursor_pos_y) * 0.01f;
+                    float delta_x = static_cast<float>(xpos - last_cursor_pos_x) * 0.01f;
+
+                    float delta = 0;
+                    if (i == 0)
+                        delta = -delta_y;
+                    else if (i == 1)
+                        delta = delta_y;
+                    else if (i == 2)
+                        delta = -delta_x;
+                    else if (i == 3)
+                        delta = delta_x;
+
+                    mesh->translate(delta * direction);
                 }
 
             } else {
 
-            GLint id = 0;
-            glReadPixels(static_cast<int>(xpos),
-                         win->get_scene_description_ptr()->screen_height - static_cast<int>(ypos) - 1,
-                         1,
-                         1,
-                         GL_STENCIL_INDEX,
-                         GL_INT,
-                         &id);
-            std::shared_ptr<GizmoAxis> gizmo_axis = scene->get_gizmo_axis_from_id(id);
-            scene->deselect_gizmo();
-            if (gizmo_axis)
-                gizmo_axis->set_selected(true);
+                GLint id = 0;
+                glReadPixels(static_cast<int>(xpos),
+                             win->get_scene_description_ptr()->screen_height -
+                                 static_cast<int>(ypos) - 1,
+                             1,
+                             1,
+                             GL_STENCIL_INDEX,
+                             GL_INT,
+                             &id);
+                std::shared_ptr<GizmoAxis> gizmo_axis = scene->get_gizmo_axis_from_id(id);
+                scene->deselect_gizmo();
+                if (gizmo_axis)
+                    gizmo_axis->set_selected(true);
             }
         }
     }
-
 
     last_cursor_pos_x = static_cast<float>(xpos);
     last_cursor_pos_y = static_cast<float>(ypos);

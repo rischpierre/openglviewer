@@ -28,6 +28,9 @@ public:
     [[nodiscard]] glm::mat4 get_projection() const { return m_projection; };
     glm::mat4 get_view();
 
+    [[nodiscard]] glm::vec3 get_up() const {return m_up;};
+    [[nodiscard]] glm::vec3 get_left() const {return m_left;};
+
 private:
     glm::mat4 m_view = glm::mat4(0.f);
     glm::mat4 m_projection;

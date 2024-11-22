@@ -160,9 +160,9 @@ oglv::Gizmo::Gizmo() {
     m_gizmo_arrow_x->set_color(glm::vec3(0.6f, 0, 0));
     m_gizmo_arrow_y->set_color(glm::vec3(0, 0.6f, 0));
     m_gizmo_arrow_z->set_color(glm::vec3(0, 0, 0.6f));
-    m_gizmo_arrow_x->set_id(0);
-    m_gizmo_arrow_y->set_id(1);
-    m_gizmo_arrow_z->set_id(2);
+    m_gizmo_arrow_x->set_direction(glm::vec3(1, 0, 0));
+    m_gizmo_arrow_y->set_direction(glm::vec3(0, 1, 0));
+    m_gizmo_arrow_z->set_direction(glm::vec3(0, 0, 1));
 }
 std::shared_ptr<oglv::GizmoAxis> oglv::Gizmo::get_selected_gizmo_axis() const {
     if (m_gizmo_arrow_x->is_selected()) return m_gizmo_arrow_x;

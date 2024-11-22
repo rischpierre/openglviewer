@@ -26,11 +26,11 @@ public:
     glm::mat4 *get_transform() { return &m_transform; }
     void set_transform(glm::mat4 m) { m_transform = m; };
     void set_color(glm::vec3 c) { m_color = c; };
-    void set_id(unsigned int i){id = i;};
-    unsigned int get_id() const {return id;};
+    void set_direction(const glm::vec3& dir){m_direction = dir; };
+    glm::vec3 get_direction() const {return m_direction;};
 
 private:
-    unsigned int id;
+    glm::vec3 m_direction;
     bool m_selected = false;
     unsigned int m_vao, m_vbo, m_ebo;
     int m_num_indices;
