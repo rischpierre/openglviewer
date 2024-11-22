@@ -21,12 +21,16 @@ public:
               const std::string &frag_shader);
     ~GizmoAxis();
     void set_selected(bool s) { m_selected = s; };
+    bool is_selected() { return m_selected; };
     void draw(Camera *camera);
     glm::mat4 *get_transform() { return &m_transform; }
     void set_transform(glm::mat4 m) { m_transform = m; };
     void set_color(glm::vec3 c) { m_color = c; };
+    void set_id(unsigned int i){id = i;};
+    unsigned int get_id() const {return id;};
 
 private:
+    unsigned int id;
     bool m_selected = false;
     unsigned int m_vao, m_vbo, m_ebo;
     int m_num_indices;
@@ -50,6 +54,7 @@ public:
     std::shared_ptr<GizmoAxis> get_m_gizmo_arrow_z() const { return m_gizmo_arrow_z; };
     void set_linked_mesh(std::shared_ptr<Mesh> m) { m_linked_mesh = m; };
     std::shared_ptr<Mesh> get_linked_mesh() const { return m_linked_mesh; };
+    std::shared_ptr<GizmoAxis> get_selected_gizmo_axis() const;
 
 private:
     bool m_visible = false;

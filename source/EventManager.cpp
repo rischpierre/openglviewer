@@ -5,6 +5,7 @@
 
 static float last_cursor_pos_x;
 static float last_cursor_pos_y;
+static bool cursor_locked = false;
 
 oglv::EventManager::EventManager(GLFWwindow *glfw_window, Window *window)
     : m_window(window), m_glfw_window(glfw_window) {
@@ -39,6 +40,19 @@ void oglv::EventManager::_mouse_button_callback(GLFWwindow *window,
         std::shared_ptr<Mesh> mesh = w->get_scene()->get_mesh(id);
         if (mesh)
             mesh->set_selected(true);
+    }
+    // lock cursor on gizmo
+    else if (w->get_mode() == TRANSFORM && button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+        std::shared_ptr<oglv::Mesh> mesh = w->get_scene()->get_selected_mesh();
+        std::shared_ptr<GizmoAxis> gizmo_axis = w->get_scene()->get_gizmo()->get_selected_gizmo_axis();
+        if (mesh && gizmo_axis) {
+            cursor_locked = true;
+            std::cout << "lock cursor\n";
+        }
+    }
+    else if (w->get_mode() == TRANSFORM && button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+        std::cout << "unlock cursor\n";
+        cursor_locked = false;
     }
 }
 
@@ -92,9 +106,26 @@ void oglv::EventManager::_cursor_pos_callback(GLFWwindow *window, double xpos, d
     }
 
     // transform gizmo
-    if (win->get_mode() == TRANSFORM){
+    else if (win->get_mode() == TRANSFORM){
         std::shared_ptr<Mesh> mesh = scene->get_selected_mesh();
         if (mesh) {
+
+            if (cursor_locked) {
+                if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+                    std::shared_ptr<GizmoAxis> g = scene->get_gizmo()->get_selected_gizmo_axis();
+                    unsigned int id = g->get_id();
+                    // todo choose the delta based on the
+                    auto delta = static_cast<float>(xpos - last_cursor_pos_x) * 0.01f;
+                    glm::vec3 t{0};
+
+                    if (id == 0) t = {delta, 0, 0};
+                    if (id == 1) t = {0, delta, 0};
+                    if (id == 2) t = {0, 0, delta};
+
+                    mesh->translate(t);
+                }
+
+            } else {
 
             GLint id = 0;
             glReadPixels(static_cast<int>(xpos),
@@ -106,14 +137,9 @@ void oglv::EventManager::_cursor_pos_callback(GLFWwindow *window, double xpos, d
                          &id);
             std::shared_ptr<GizmoAxis> gizmo_axis = scene->get_gizmo_axis_from_id(id);
             scene->deselect_gizmo();
-            if (gizmo_axis) {
+            if (gizmo_axis)
                 gizmo_axis->set_selected(true);
-                if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-                    // todo transform
-                    std::cout << "transform\n";
-                }
             }
-
         }
     }
 
