@@ -69,33 +69,54 @@ void oglv::EventManager::_key_callback(GLFWwindow *window,
 }
 
 void oglv::EventManager::_cursor_pos_callback(GLFWwindow *window, double xpos, double ypos) {
+    auto *win = (Window *)glfwGetWindowUserPointer(window);
+    Scene* scene = win->get_scene();
+
     // orbit cam
     if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) &&
         glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 
-        auto *w = (Window *)glfwGetWindowUserPointer(window);
-        w->get_scene()->get_camera()->add_yaw(last_cursor_pos_x - static_cast<float>(xpos));
-        w->get_scene()->get_camera()->add_pitch(last_cursor_pos_y - static_cast<float>(ypos));
+        scene->get_camera()->add_yaw(last_cursor_pos_x - static_cast<float>(xpos));
+        scene->get_camera()->add_pitch(last_cursor_pos_y - static_cast<float>(ypos));
     }
     // pan
     else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) &&
              glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) {
-        auto *w = (Window *)glfwGetWindowUserPointer(window);
-        w->get_scene()->get_camera()->pan(static_cast<float>(ypos) - last_cursor_pos_y,
+        scene->get_camera()->pan(static_cast<float>(ypos) - last_cursor_pos_y,
                                           static_cast<float>(xpos) - last_cursor_pos_x);
     }
     // dolly
     else if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) &&
              glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
-        auto *w = (Window *)glfwGetWindowUserPointer(window);
-        w->get_scene()->get_camera()->dolly(last_cursor_pos_y - static_cast<float>(ypos));
+        scene->get_camera()->dolly(last_cursor_pos_y - static_cast<float>(ypos));
     }
-    // transform
-    else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-        auto *w = (Window *)glfwGetWindowUserPointer(window);
-        if (w->get_mode() == TRANSFORM && w->get_scene()->get_selected_mesh()) {
+
+    // transform gizmo
+    if (win->get_mode() == TRANSFORM){
+        std::shared_ptr<Mesh> mesh = scene->get_selected_mesh();
+        if (mesh) {
+
+            GLint id = 0;
+            glReadPixels(static_cast<int>(xpos),
+                         win->get_scene_description_ptr()->screen_height - static_cast<int>(ypos) - 1,
+                         1,
+                         1,
+                         GL_STENCIL_INDEX,
+                         GL_INT,
+                         &id);
+            std::shared_ptr<GizmoAxis> gizmo_axis = scene->get_gizmo_axis_from_id(id);
+            scene->deselect_gizmo();
+            if (gizmo_axis) {
+                gizmo_axis->set_selected(true);
+                if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+                    // todo transform
+                    std::cout << "transform\n";
+                }
+            }
+
         }
     }
+
 
     last_cursor_pos_x = static_cast<float>(xpos);
     last_cursor_pos_y = static_cast<float>(ypos);
