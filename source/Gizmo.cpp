@@ -85,7 +85,7 @@ void oglv::Gizmo::draw(oglv::Camera *camera) {
     m_gizmo_arrow_z->draw(camera);
 }
 
-void oglv::Gizmo::apply_transform(glm::mat4 t) {
+void oglv::Gizmo::apply_transform(glm::mat4 t) const {
 
     glm::mat4 m_transform_x(1.f);
     m_transform_x = glm::rotate(m_transform_x, glm::radians(90.f), glm::vec3(0, 0, 1));

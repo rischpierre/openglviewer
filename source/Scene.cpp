@@ -41,12 +41,12 @@ void oglv::Scene::deselect_all() const {
         m->set_selected(false);
     }
 }
-bool oglv::Scene::is_one_mesh_selected() const {
+std::shared_ptr<oglv::Mesh> oglv::Scene::get_selected_mesh() const {
     for (const auto &m : m_meshes) {
         if (m->is_selected())
-            return true;
+            return m;
     }
-    return false;
+    return nullptr;
 }
 
 void oglv::Scene::deselect_gizmo() const {

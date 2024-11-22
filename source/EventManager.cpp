@@ -52,14 +52,19 @@ void oglv::EventManager::_key_callback(GLFWwindow *window,
     } else if (key == GLFW_KEY_W && action == GLFW_PRESS) {
         auto *w = (Window *)glfwGetWindowUserPointer(window);
         w->set_mode(TRANSFORM);
-        if (w->get_scene()->is_one_mesh_selected()) {
+        std::shared_ptr<Mesh> selected_mesh = w->get_scene()->get_selected_mesh();
+        if (selected_mesh) {
+            selected_mesh->set_ready_to_transform(true);
             w->get_scene()->set_gizmo_visibility(true);
+        } else {
+            w->get_scene()->unset_transform_all();
         }
 
     } else if (key == GLFW_KEY_S && action == GLFW_PRESS) {
         auto *w = (Window *)glfwGetWindowUserPointer(window);
         w->set_mode(SELECTION);
         w->get_scene()->set_gizmo_visibility(false);
+        w->get_scene()->unset_transform_all();
     }
 }
 
@@ -88,7 +93,7 @@ void oglv::EventManager::_cursor_pos_callback(GLFWwindow *window, double xpos, d
     // transform
     else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         auto *w = (Window *)glfwGetWindowUserPointer(window);
-        if (w->get_mode() == TRANSFORM && w->get_scene()->is_one_mesh_selected()) {
+        if (w->get_mode() == TRANSFORM && w->get_scene()->get_selected_mesh()) {
         }
     }
 

@@ -35,7 +35,7 @@ public:
 
     /// Deselect all the gizmo axis
     void deselect_gizmo() const;
-    [[nodiscard]] bool is_one_mesh_selected() const;
+    std::shared_ptr<Mesh> get_selected_mesh() const;
     void set_gizmo_visibility(bool v) { m_gizmo.set_visible(v); };
 
 private:

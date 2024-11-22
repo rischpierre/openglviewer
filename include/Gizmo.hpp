@@ -42,7 +42,7 @@ class Gizmo {
 public:
     Gizmo();
     void draw(Camera *camera);
-    void apply_transform(glm::mat4 t);
+    void apply_transform(glm::mat4 t) const;
     [[nodiscard]] bool is_visible() const { return m_visible; };
     void set_visible(bool v) { m_visible = v; };
     std::shared_ptr<GizmoAxis> get_m_gizmo_arrow_x() const { return m_gizmo_arrow_x; };
