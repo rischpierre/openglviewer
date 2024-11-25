@@ -1,4 +1,5 @@
 - [x] gizmo transform
-- [ ] enable textures
-- [ ] use scene description to put the transform mat
+- [x] enable textures
+- [x] use scene description to put the transform mat
+- [ ] paint texture for the monkey on blender
 - [ ] update gif demo

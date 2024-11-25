@@ -21,7 +21,7 @@ oglv::Scene::Scene(SceneDescription s)
       m_light() {
     _create_light();
     _load_meshes();
-    m_gizmo = oglv::Gizmo();
+    m_gizmo = Gizmo();
 }
 std::shared_ptr<oglv::Mesh> oglv::Scene::get_mesh(unsigned int id) {
 
@@ -55,14 +55,13 @@ void oglv::Scene::deselect_gizmo() const {
     m_gizmo.get_m_gizmo_arrow_z()->set_selected(false);
 };
 void oglv::Scene::_create_light() {
-    // todo move light in scene description
     m_light = Light();
-    m_light.position = glm::vec3(10, 10, 3);
-    m_light.intensity = glm::vec3(0.5, 0.4, 0.3);
+    m_light.position = m_scene_description.light_position;
+    m_light.intensity = m_scene_description.light_intensity;
 }
 
 void oglv::Scene::_load_meshes() {
-
+    int i = 0;
     for (const std::string &obj_file : m_scene_description.obj_files) {
 
         Assimp::Importer importer;
@@ -82,22 +81,20 @@ void oglv::Scene::_load_meshes() {
             std::vector<float> vertices;
             std::vector<unsigned int> indices;
 
-            for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-                vertices.push_back(mesh->mVertices[i].x);
-                vertices.push_back(mesh->mVertices[i].y);
-                vertices.push_back(mesh->mVertices[i].z);
-                vertices.push_back(mesh->mNormals[i].x);
-                vertices.push_back(mesh->mNormals[i].y);
-                vertices.push_back(mesh->mNormals[i].z);
-
-                // todo get the UV
-                vertices.push_back(0.f);
-                vertices.push_back(0.f);
+            for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
+                vertices.push_back(mesh->mVertices[j].x);
+                vertices.push_back(mesh->mVertices[j].y);
+                vertices.push_back(mesh->mVertices[j].z);
+                vertices.push_back(mesh->mNormals[j].x);
+                vertices.push_back(mesh->mNormals[j].y);
+                vertices.push_back(mesh->mNormals[j].z);
+                vertices.push_back(mesh->mTextureCoords[0][j].x);
+                vertices.push_back(mesh->mTextureCoords[0][j].y);
             }
-            for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
-                unsigned int *indices_ = mesh->mFaces[i].mIndices;
+            for (unsigned int j = 0; j < mesh->mNumFaces; j++) {
+                unsigned int *indices_ = mesh->mFaces[j].mIndices;
 
-                // there is only triangles
+                // there is only triangles since triangulation is forced on load.
                 indices.push_back(*(indices_));
                 indices.push_back(*(indices_ + 1));
                 indices.push_back(*(indices_ + 2));
@@ -110,9 +107,11 @@ void oglv::Scene::_load_meshes() {
                                              &indices[0],
                                              indices.size() * sizeof(unsigned int),
                                              "../shaders/mesh.vert",
-                                             "../shaders/mesh.frag");
+                                             "../shaders/mesh.frag",
+                                             m_scene_description.textures[i]);
             m_meshes.emplace_back(mesh_ptr);
         }
+        i++;
     }
 }
 

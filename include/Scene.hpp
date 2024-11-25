@@ -4,8 +4,8 @@
 #include "Camera.hpp"
 #include "Gizmo.hpp"
 #include "Grid.hpp"
-#include "Light.hpp"
 #include "Mesh.hpp"
+#include "Light.hpp"
 #include "SceneDescription.hpp"
 
 namespace oglv {

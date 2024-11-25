@@ -17,7 +17,13 @@ void oglv::Mesh::draw(oglv::Camera *camera, Light *light, oglv::Gizmo *gizmo) {
     m_selected ? m_shader.set_uniform_bool("overlay", true)
                : m_shader.set_uniform_bool("overlay", false);
 
-    glBindTexture(GL_TEXTURE_2D, m_shader.get_id_texture());
+    if (!m_texture.empty()) {
+        glBindTexture(GL_TEXTURE_2D, m_shader.get_id_texture());
+        m_shader.set_uniform_bool("activate_texture", true);
+    } else {
+        m_shader.set_uniform_bool("activate_texture", false);
+    }
+
     glUseProgram(m_shader.get_program_id());
     glBindVertexArray(m_vao);
 
@@ -35,8 +41,10 @@ oglv::Mesh::Mesh(const std::string &name,
                  const unsigned int *indices,
                  long size_indices,
                  const std::string &vert_shader,
-                 const std::string &frag_shader)
-    : m_shader(vert_shader, frag_shader), m_vao(0), m_vbo(0), m_ebo(0), m_name(name) {
+                 const std::string &frag_shader,
+                 const std::string &texture)
+    : m_shader(vert_shader, frag_shader), m_vao(0), m_vbo(0), m_ebo(0), m_name(name),
+      m_texture(texture) {
 
     m_num_indices = (int)(size_indices / sizeof(unsigned int));
 
@@ -84,6 +92,9 @@ oglv::Mesh::Mesh(const std::string &name,
     glEnableVertexAttribArray(/*index (layout location*/ 1);
     glEnableVertexAttribArray(/*index (layout location*/ 2);
     glBindVertexArray(0);
+
+    if (!texture.empty())
+        m_shader.generate_texture(texture);
 }
 
 oglv::Mesh::~Mesh() {

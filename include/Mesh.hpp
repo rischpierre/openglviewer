@@ -18,7 +18,8 @@ public:
          const unsigned int *indices,
          long size_indices,
          const std::string &vert_shader,
-         const std::string &frag_shader);
+         const std::string &frag_shader,
+         const std::string &texture);
     ~Mesh();
 
     /// Draws the object onto the screen
@@ -53,6 +54,8 @@ private:
     int m_num_indices;
     Shader m_shader;
     glm::mat4 m_transform = glm::mat4(1.f);
+
+    std::string m_texture;
 };
 } // namespace oglv
 
