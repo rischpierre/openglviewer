@@ -17,7 +17,7 @@ void main() {
 
     float dot_product = dot(N, light_position);
 
-    vec3 ambient = vec3(0.03);
+    vec3 ambient = vec3(0.01);
 
     vec3 albedo = texture(sampler, texCoord).xyz * int(activate_texture) + vec3(0.3) * (1 - int(activate_texture));
 
